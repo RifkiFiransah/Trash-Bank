@@ -84,6 +84,22 @@ class PenjualanSeeder extends Seeder
                 'harga' => 1500,
                 'total' => 60000,
             ],
+            [
+                'sampah_id' => $sampahs->where('nama', 'Botol Plastik')->first()->id,
+                'berat' => '60',
+                'pembeli' => 'UD. Plastik Sejahtera',
+                'kontak' => '081234567898',
+                'harga' => 2000,
+                'total' => 120000,
+            ],
+            [
+                'sampah_id' => $sampahs->where('nama', 'Kardus')->first()->id,
+                'berat' => '35',
+                'pembeli' => 'PT. Papan Kertas Indonesia',
+                'kontak' => '081234567899',
+                'harga' => 3000,
+                'total' => 105000,
+            ],
         ];
 
         foreach ($penjualans as $penjualan) {

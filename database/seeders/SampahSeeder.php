@@ -38,7 +38,43 @@ class SampahSeeder extends Seeder
                 'satuan' => 'kg',
                 'harga' => '800',
             ],
-            
+            [
+                'jenis' => 'organik',
+                'nama' => 'Tumpukan Rumput',
+                'satuan' => 'kg',
+                'harga' => '600',
+            ],
+            [
+                'jenis' => 'organik',
+                'nama' => 'Sisa sayuran',
+                'satuan' => 'kg',
+                'harga' => '900',
+            ],
+            [
+                'jenis' => 'organik',
+                'nama' => 'Batu Bara Organik',
+                'satuan' => 'kg',
+                'harga' => '400',
+            ],
+            [
+                'jenis' => 'organik',
+                'nama' => 'Kotoran Hewan',
+                'satuan' => 'kg',
+                'harga' => '500',
+            ],
+            [
+                'jenis' => 'organik',
+                'nama' => 'Sisa Pangan Makanan',
+                'satuan' => 'kg',
+                'harga' => '700',
+            ],
+            [
+                'jenis' => 'organik',
+                'nama' => 'Kerang',
+                'satuan' => 'kg',
+                'harga' => '800',
+            ],
+
             // Sampah Non-Organik
             [
                 'jenis' => 'none-organik',
@@ -87,6 +123,36 @@ class SampahSeeder extends Seeder
                 'nama' => 'Kertas HVS',
                 'satuan' => 'kg',
                 'harga' => '3500',
+            ],
+            [
+                'jenis' => 'none-organik',
+                'nama' => 'Styrofoam',
+                'satuan' => 'kg',
+                'harga' => '1200',
+            ],
+            [
+                'jenis' => 'none-organik',
+                'nama' => 'Bes Plastik',
+                'satuan' => 'kg',
+                'harga' => '1800',
+            ],
+            [
+                'jenis' => 'none-organik',
+                'nama' => 'Tembaga',
+                'satuan' => 'kg',
+                'harga' => '25000',
+            ],
+            [
+                'jenis' => 'none-organik',
+                'nama' => 'Kabel Siaran',
+                'satuan' => 'kg',
+                'harga' => '18000',
+            ],
+            [
+                'jenis' => 'none-organik',
+                'nama' => 'Residu Elektronik',
+                'satuan' => 'kg',
+                'harga' => '10000',
             ],
         ];
 

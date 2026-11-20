@@ -60,6 +60,16 @@ class PenarikanSeeder extends Seeder
                 'nama' => 'Penarikan Khusus',
                 'jumlah' => 20000,
             ],
+            [
+                'user_id' => $users->random()->id,
+                'nama' => 'Penarikan Periode Ganjil',
+                'jumlah' => 60000,
+            ],
+            [
+                'user_id' => $users->random()->id,
+                'nama' => 'Penarikan Periode Genap',
+                'jumlah' => 55000,
+            ],
         ];
 
         foreach ($penarikans as $penarikan) {

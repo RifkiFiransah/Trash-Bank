@@ -82,6 +82,36 @@ class SetoranSeeder extends Seeder
                 'berat' => '2',
                 'total' => '7000',
             ],
+            [
+                'user_id' => $users->random()->id,
+                'sampah_id' => $sampahs->where('nama', 'Botol Plastik')->first()->id,
+                'berat' => '7',
+                'total' => '14000',
+            ],
+            [
+                'user_id' => $users->random()->id,
+                'sampah_id' => $sampahs->where('nama', 'Kaleng Aluminium')->first()->id,
+                'berat' => '1.5',
+                'total' => '22500',
+            ],
+            [
+                'user_id' => $users->random()->id,
+                'sampah_id' => $sampahs->where('nama', 'Kertas Koran')->first()->id,
+                'berat' => '5',
+                'total' => '12500',
+            ],
+            [
+                'user_id' => $users->random()->id,
+                'sampah_id' => $sampahs->where('nama', 'Sisa Makanan')->first()->id,
+                'berat' => '4.5',
+                'total' => '8100',
+            ],
+            [
+                'user_id' => $users->random()->id,
+                'sampah_id' => $sampahs->where('nama', 'Botol Kaca')->first()->id,
+                'berat' => '10',
+                'total' => '15000',
+            ],
         ];
 
         foreach ($setorans as $setoran) {
