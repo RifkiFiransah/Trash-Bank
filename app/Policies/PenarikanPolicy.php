@@ -2,11 +2,10 @@
 
 namespace App\Policies;
 
-use App\Models\User;
 use App\Models\Admin;
 use App\Models\Penarikan;
+use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
-use Illuminate\Contracts\Auth\Authenticatable;
 
 class PenarikanPolicy
 {

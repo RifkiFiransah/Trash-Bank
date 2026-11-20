@@ -15,18 +15,20 @@ class Sampah extends Model
 
     protected static function booted()
     {
-        static::deleted(function($sampah){
-            if($sampah->image){
+        static::deleted(function ($sampah) {
+            if ($sampah->image) {
                 Storage::disk('public')->delete($sampah->image);
             }
         });
     }
 
-    public function penjualans(): HasMany{
+    public function penjualans(): HasMany
+    {
         return $this->hasMany(Penjualan::class);
     }
 
-    public function setorans(): HasMany{
+    public function setorans(): HasMany
+    {
         return $this->hasMany(Setoran::class);
     }
 }

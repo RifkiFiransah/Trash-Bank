@@ -2,9 +2,9 @@
 
 namespace App\Policies;
 
-use App\Models\User;
 use App\Models\Admin;
 use App\Models\Setoran;
+use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class SetoranPolicy

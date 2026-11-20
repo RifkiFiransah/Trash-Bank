@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -11,8 +12,8 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, HasRoles;
+    /** @use HasFactory<UserFactory> */
+    use HasFactory, HasRoles, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -25,7 +26,7 @@ class User extends Authenticatable
         'password',
         'jumlah_setoran',
         'jumlah_penarikan',
-        'saldo'
+        'saldo',
     ];
 
     /**
@@ -51,8 +52,9 @@ class User extends Authenticatable
         ];
     }
 
-    public static function booted(){
-        static::saved(function($user) {
+    public static function booted()
+    {
+        static::saved(function ($user) {
             $user->jumlah_penarikan = 0;
             $user->jumlah_setoran = 0;
             $user->saldo = 0;
@@ -60,18 +62,21 @@ class User extends Authenticatable
         });
     }
 
-    public function setNameAttribute($val){
+    public function setNameAttribute($val)
+    {
         $this->attributes['name'] = $val;
         $this->attributes['saldo'] = 0;
         $this->attributes['jumlah_setoran'] = 0;
         $this->attributes['jumlah_penarikan'] = 0;
     }
 
-    public function penarikans(): HasMany{
+    public function penarikans(): HasMany
+    {
         return $this->hasMany(Penarikan::class);
     }
 
-    public function setorans(): HasMany {
+    public function setorans(): HasMany
+    {
         return $this->hasMany(Setoran::class);
     }
 }

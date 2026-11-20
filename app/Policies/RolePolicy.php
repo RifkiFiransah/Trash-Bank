@@ -2,10 +2,10 @@
 
 namespace App\Policies;
 
-use App\Models\User;
 use App\Models\Admin;
-use Spatie\Permission\Models\Role;
+use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Spatie\Permission\Models\Role;
 
 class RolePolicy
 {

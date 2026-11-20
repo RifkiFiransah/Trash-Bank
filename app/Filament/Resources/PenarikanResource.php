@@ -3,34 +3,35 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\PenarikanResource\Pages;
-use App\Filament\Resources\PenarikanResource\RelationManagers;
 use App\Models\Penarikan;
-use App\Models\User;
-use Filament\Forms;
+use BackedEnum;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
 use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\Section;
-use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Auth;
+use UnitEnum;
 
 class PenarikanResource extends Resource
 {
     protected static ?string $model = Penarikan::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-banknotes';
-    protected static ?string $navigationGroup = 'Bank Management';
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-banknotes';
+
+    protected static string|UnitEnum|null $navigationGroup = 'Bank Management';
+
     protected static ?int $navigationSort = 3;
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
+        return $schema
             ->schema([
                 Section::make()->schema([
                     Hidden::make('user_id')->default(Auth::user()->id),
@@ -42,9 +43,9 @@ class PenarikanResource extends Resource
                         ->dehydrated(false),
                     TextInput::make('jumlah')->required()
                         ->numeric()
-                        ->rule(fn($get) => 'lte:' . $get('saldo'))
+                        ->rule(fn ($get) => 'lte:'.$get('saldo'))
                         ->helperText('Jumlah tidak boleh lebih dari saldo'),
-                ])->columnSpan(1)
+                ])->columnSpan(1),
             ]);
     }
 
@@ -52,7 +53,7 @@ class PenarikanResource extends Resource
     {
         $query = parent::getEloquentQuery();
 
-        if(Auth::user()->email !== "adminn@banksampah.com"){
+        if (Auth::user()->email !== 'adminn@banksampah.com') {
             $query->where('user_id', Auth::id());
         }
 
@@ -64,17 +65,17 @@ class PenarikanResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('nama')->sortable()->searchable(),
-                TextColumn::make('jumlah')->sortable()->formatStateUsing(fn($state) => 'Rp. '.number_format($state, '0', ',', '.'))
+                TextColumn::make('jumlah')->sortable()->formatStateUsing(fn ($state) => 'Rp. '.number_format($state, '0', ',', '.')),
             ])
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }

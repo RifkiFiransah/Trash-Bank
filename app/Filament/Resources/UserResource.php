@@ -3,51 +3,49 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\UserResource\Pages;
-use App\Filament\Resources\UserResource\RelationManagers;
 use App\Models\User;
-use Filament\Forms;
-use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\Section;
+use BackedEnum;
+use Filament\Actions\ActionGroup;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
-use Filament\Tables;
-use Filament\Tables\Actions\ActionGroup;
-use Filament\Tables\Actions\DeleteAction;
-use Filament\Tables\Actions\ViewAction;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-
-use function PHPUnit\Framework\isNull;
+use UnitEnum;
 
 class UserResource extends Resource
 {
     protected static ?string $model = User::class;
-    protected static ?string $navigationGroup = 'User Management';
+
+    protected static string|UnitEnum|null $navigationGroup = 'User Management';
+
     protected static ?int $navigationSort = 5;
 
-    protected static ?string $navigationIcon = 'heroicon-o-user-group';
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-user-group';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
+        return $schema
             ->schema([
                 Section::make()->schema([
                     TextInput::make('name')->required()->maxLength(255),
-                    TextInput::make('email')->required()->email()->unique(ignoreRecord:true),
+                    TextInput::make('email')->required()->email()->unique(ignoreRecord: true),
                     TextInput::make('password')->required()->password()->revealable(),
-                    Select::make('roles')->relationship('roles', 'name')
+                    Select::make('roles')->relationship('roles', 'name'),
                     // Hidden::make('saldo')->default(0),
                     // Hidden::make('jumlah_penarikan')->default(0),
-                    // Hidden::make('jumlah_setoran')->default(0),  
-                ])->columnSpan(1)
+                    // Hidden::make('jumlah_setoran')->default(0),
+                ])->columnSpan(1),
             ]);
     }
 
@@ -72,28 +70,28 @@ class UserResource extends Resource
                     ->label('Jml Tarik')
                     ->sortable()
                     ->formatStateUsing(fn ($state) => empty($state) ? 0 : $state),
-                TextColumn::make('saldo')   
+                TextColumn::make('saldo')
                     ->sortable()
-                    ->formatStateUsing(fn ($state) => "Rp. ".number_format($state, 0, ',', '.')),
+                    ->formatStateUsing(fn ($state) => 'Rp. '.number_format($state, 0, ',', '.')),
             ])
             ->filters([
                 //
             ])
-            ->actions([
+            ->recordActions([
                 ActionGroup::make([
                     ViewAction::make(),
-                    Tables\Actions\EditAction::make(),  
+                    EditAction::make(),
                     DeleteAction::make()
                         ->requiresConfirmation()
-                        ->action(function(Model $record){
-                            if($record->email === Auth::user()->email || $record->email == 'adminn@banksampah.com'){
+                        ->action(function (Model $record) {
+                            if ($record->email === Auth::user()->email || $record->email == 'adminn@banksampah.com') {
                                 Notification::make()
                                     ->title('Operation Failed')
-                                    ->body($record->name." tidak boleh di hapus")
+                                    ->body($record->name.' tidak boleh di hapus')
                                     ->danger()
                                     ->send();
-                                    
-                                    return;
+
+                                return;
                             }
                             Notification::make()
                                 ->title('Operation Successfully')
@@ -102,11 +100,11 @@ class UserResource extends Resource
 
                             // $record->delete();
                         }),
-                ])
+                ]),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }

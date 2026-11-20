@@ -3,52 +3,45 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\SetoranResource\Pages;
-use App\Filament\Resources\SetoranResource\RelationManagers;
 use App\Models\Sampah;
 use App\Models\Setoran;
+use BackedEnum;
+use Filament\Actions\ActionGroup;
 use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
-use Filament\Forms;
-use Filament\Forms\Components\Builder as ComponentsBuilder;
 use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
-use Filament\Forms\Set;
 use Filament\Resources\Resource;
-use Filament\Tables;
-use Filament\Tables\Actions\ActionGroup;
-use Filament\Tables\Actions\DeleteAction as ActionsDeleteAction;
-use Filament\Tables\Actions\ViewAction as ActionsViewAction;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
-use Illuminate\Contracts\Database\Query\Builder as DatabaseQueryBuilder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Illuminate\Database\Query\Builder as QueryBuilder;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use UnitEnum;
 
 class SetoranResource extends Resource
 {
     protected static ?string $model = Setoran::class;
 
-    protected static ?string $query = Builder::class;
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-currency-dollar';
 
-    protected static ?string $navigationIcon = 'heroicon-o-currency-dollar';
-    protected static ?string $navigationGroup = 'Bank Management';
+    protected static string|UnitEnum|null $navigationGroup = 'Bank Management';
+
     protected static ?int $navigationSort = 2;
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
+        return $schema
             ->schema([
                 Section::make('')->schema([
                     Select::make('sampah_id')
                         ->relationship('sampah', 'nama')
-                        ->live(onBlur:true)
+                        ->live(onBlur: true)
                         ->afterStateUpdated(function ($state, callable $set) {
                             $sampah = Sampah::find($state);
                             $set('harga', $sampah ? $sampah->harga : 0);
@@ -59,8 +52,8 @@ class SetoranResource extends Resource
                     TextInput::make('berat')
                         ->required()
                         ->numeric()
-                        ->live(onBlur:true)
-                        ->afterStateUpdated(function($state, callable $set, $get) {
+                        ->live(onBlur: true)
+                        ->afterStateUpdated(function ($state, callable $set, $get) {
                             $harga = $get('harga');
                             $set('total', $state * $harga);
                         })
@@ -70,8 +63,8 @@ class SetoranResource extends Resource
                         ->numeric()
                         ->dehydrated(false)
                         ->label('Harga per-KG'),
-                    TextInput::make('total')->required()->readOnly()->dehydrated()->helperText('Total harga akan muncul setelah mengisi input berat')
-                ])->columnSpan(2)
+                    TextInput::make('total')->required()->readOnly()->dehydrated()->helperText('Total harga akan muncul setelah mengisi input berat'),
+                ])->columnSpan(2),
             ]);
     }
 
@@ -92,10 +85,10 @@ class SetoranResource extends Resource
             ->columns([
                 TextColumn::make('user.name')->searchable()->sortable(),
                 TextColumn::make('sampah.nama')->searchable()->sortable(),
-                TextColumn::make('berat')->sortable()->formatStateUsing(fn ($state) => $state . ' KG'),
+                TextColumn::make('berat')->sortable()->formatStateUsing(fn ($state) => $state.' KG'),
                 TextColumn::make('total')->money('IDR', 1, '.', '.')->sortable(),
-                TextColumn::make('created_at')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault:true),
-                TextColumn::make('updated_at')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault:true),
+                TextColumn::make('created_at')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('updated_at')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
             ])
             ->headerActions([
                 // Tables\Actions\CreateAction::make() // Menggunakan CreateAction yang benar
@@ -108,25 +101,23 @@ class SetoranResource extends Resource
                 SelectFilter::make('sampah_id')->label('Jenis Sampah')->relationship('sampah', 'nama'),
                 SelectFilter::make('user_id')->label('Nama')->relationship('user', 'name'),
             ])
-            ->actions([
+            ->recordActions([
                 ActionGroup::make([
-                    ActionsViewAction::make(),
-                    Tables\Actions\EditAction::make(),
-                    ActionsDeleteAction::make(),
-                ])
+                    ViewAction::make(),
+                    EditAction::make(),
+                    DeleteAction::make(),
+                ]),
             ])
-            ->bulkActions([
-                // Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                // ]),
+            ->toolbarActions([
+                DeleteBulkAction::make(),
             ]);
-            // ->query(function (Builder $query): Builder {
-            //     // Hanya tampilkan data user tertentu jika bukan admin
-            //     if (Auth::check() && Auth::user()->email != 'adminn@banksampah.com') {
-            //         $query->where('user_id', Auth::id());
-            //     }
-            //     return $query;
-            // });
+        // ->query(function (Builder $query): Builder {
+        //     // Hanya tampilkan data user tertentu jika bukan admin
+        //     if (Auth::check() && Auth::user()->email != 'adminn@banksampah.com') {
+        //         $query->where('user_id', Auth::id());
+        //     }
+        //     return $query;
+        // });
     }
 
     public static function getRelations(): array

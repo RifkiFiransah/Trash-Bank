@@ -12,7 +12,8 @@ class Setoran extends Model
 
     protected $guarded = ['id'];
 
-    protected static function booted(){
+    protected static function booted()
+    {
         static::saved(function ($setoran) {
             $user = $setoran->user; // Mendapatkan user terkait
             $user->saldo += $setoran->total; // Mengurangi saldo
@@ -23,8 +24,6 @@ class Setoran extends Model
 
     /**
      * Get the user that owns the Setoran
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function user(): BelongsTo
     {
@@ -35,5 +34,4 @@ class Setoran extends Model
     {
         return $this->belongsTo(Sampah::class, 'sampah_id');
     }
-
 }
